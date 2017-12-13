@@ -30,20 +30,38 @@ class Welcome extends CI_Controller {
 			// Security
 			
 			$api = $this->config->item('sn_api') ;
+			$webservice = $this->config->item('sn_webservice') ;
 			$amount = $data['price'] ; //Tooman
 			$callbackUrl = site_url('welcome/back/'.$data['time']).'?order_id='.$query->id.'&md='.$md.'&sec='.$sec;
 			$orderId = $query->id;			
 		
-	
+	                        if($webservice==1){
 			                $data_string = json_encode(array(
 							'pin'=> $api,
 							'price'=> $amount,
 							'callback'=> $callbackUrl ,
 							'order_id'=> $orderId,
 							'ip'=> $_SERVER['REMOTE_ADDR'],
+							'email'=>strip_tags($_POST['email']),
+							'name'=>strip_tags($_POST['name']),
+							'mobile'=>strip_tags($_POST['mob']),
 							'callback_type'=>2
 							));
-
+	                        }
+                        	else
+	    
+                            	   if($webservice==0){
+                            	    $data_string = json_encode(array(
+                            						'pin'=> $api,
+                            							'price'=> $amount,
+                            						'callback'=> $callbackUrl ,
+                            						'order_id'=> $orderId,
+                            						'ip'=> $_SERVER['REMOTE_ADDR'],
+                            						'callback_type'=>2
+                            						));
+						
+	                        }
+      var_dump($data_string);
 							$ch = curl_init('https://developerapi.net/api/v1/request');
 							curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
 							curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -55,6 +73,100 @@ class Welcome extends CI_Controller {
 							curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, 20);
 							$result = curl_exec($ch);
 							curl_close($ch);
+                                        
+                                        
+                                        $res=$json['result'];
+                                        
+                                        switch ($res) {
+                                        case -1:
+                                        $msg = "پارامترهای ارسالی برای متد مورد نظر ناقص یا خالی هستند . پارمترهای اجباری باید ارسال گردد";
+                                        break;
+                                        case -2:
+                                        $msg = "دسترسی api برای شما مسدود است";
+                                        break;
+                                        case -6:
+                                        $msg = "عدم توانایی اتصال به گیت وی بانک از سمت وبسرویس";
+                                        break;
+                                        
+                                        case -9:
+                                        $msg = "خطای ناشناخته";
+                                        break;
+                                        
+                                        case -20:
+                                        $msg = "پین نامعتبر";
+                                        break;
+                                        case -21:
+                                        $msg = "ip نامعتبر";
+                                        break;
+                                        
+                                        case -22:
+                                        $msg = "مبلغ وارد شده کمتر از حداقل مجاز میباشد";
+                                        break;
+                                        
+                                        
+                                        case -23:
+                                        $msg = "مبلغ وارد شده بیشتر از حداکثر مبلغ مجاز هست";
+                                        break;
+                                        
+                                        case -24:
+                                        $msg = "مبلغ وارد شده نامعتبر";
+                                        break;
+                                        
+                                        case -26:
+                                        $msg = "درگاه غیرفعال است";
+                                        break;
+                                        
+                                        case -27:
+                                        $msg = "آی پی مسدود شده است";
+                                        break;
+                                        
+                                        case -28:
+                                        $msg = "آدرس کال بک نامعتبر است ، احتمال مغایرت با آدرس ثبت شده";
+                                        break;
+                                        
+                                        case -29:
+                                        $msg = "آدرس کال بک خالی یا نامعتبر است";
+                                        break;
+                                        
+                                        case -30:
+                                        $msg = "چنین تراکنشی یافت نشد";
+                                        break;
+                                        
+                                        case -31:
+                                        $msg = "تراکنش ناموفق است";
+                                        break;
+                                        
+                                        case -32:
+                                        $msg = "مغایرت مبالغ اعلام شده با مبلغ تراکنش";
+                                        break;
+                                        
+                                        
+                                        case -35:
+                                        $msg = "شناسه فاکتور اعلامی order_id نامعتبر است";
+                                        break;
+                                        
+                                        case -36:
+                                        $msg = "پارامترهای برگشتی بانک bank_return نامعتبر است";
+                                        break;
+                                        case -38:
+                                        $msg = "تراکنش برای چندمین بار وریفای شده است";
+                                        break;
+                                        
+                                        case -39:
+                                        $msg = "تراکنش در حال انجام است";
+                                        break;
+                                        
+                                        case 1:
+                                        $msg = "پرداخت با موفقیت انجام گردید.";
+                                        break;
+                                        
+                                        default:
+                                        $msg = $json['msg'];
+                                        }
+
+
+
+
 
 
 							$json = json_decode($result,true);
@@ -72,7 +184,7 @@ class Welcome extends CI_Controller {
 							die('<div style="display:none">'.$json['form'].'</div>Please wait ... <script language="javascript">document.payment.submit(); </script>');
 							
 							}else{
-							print_r($json['msg']);
+							print_r($msg);
 							die;
 							}
 		}
@@ -126,6 +238,100 @@ $au=$transData['au']; //
 						curl_close($ch);
 						$json = json_decode($result,true);
 
+   $res=$json['result'];
+                                        
+                                        switch ($res) {
+                                        case -1:
+                                        $msg = "پارامترهای ارسالی برای متد مورد نظر ناقص یا خالی هستند . پارمترهای اجباری باید ارسال گردد";
+                                        break;
+                                        case -2:
+                                        $msg = "دسترسی api برای شما مسدود است";
+                                        break;
+                                        case -6:
+                                        $msg = "عدم توانایی اتصال به گیت وی بانک از سمت وبسرویس";
+                                        break;
+                                        
+                                        case -9:
+                                        $msg = "خطای ناشناخته";
+                                        break;
+                                        
+                                        case -20:
+                                        $msg = "پین نامعتبر";
+                                        break;
+                                        case -21:
+                                        $msg = "ip نامعتبر";
+                                        break;
+                                        
+                                        case -22:
+                                        $msg = "مبلغ وارد شده کمتر از حداقل مجاز میباشد";
+                                        break;
+                                        
+                                        
+                                        case -23:
+                                        $msg = "مبلغ وارد شده بیشتر از حداکثر مبلغ مجاز هست";
+                                        break;
+                                        
+                                        case -24:
+                                        $msg = "مبلغ وارد شده نامعتبر";
+                                        break;
+                                        
+                                        case -26:
+                                        $msg = "درگاه غیرفعال است";
+                                        break;
+                                        
+                                        case -27:
+                                        $msg = "آی پی مسدود شده است";
+                                        break;
+                                        
+                                        case -28:
+                                        $msg = "آدرس کال بک نامعتبر است ، احتمال مغایرت با آدرس ثبت شده";
+                                        break;
+                                        
+                                        case -29:
+                                        $msg = "آدرس کال بک خالی یا نامعتبر است";
+                                        break;
+                                        
+                                        case -30:
+                                        $msg = "چنین تراکنشی یافت نشد";
+                                        break;
+                                        
+                                        case -31:
+                                        $msg = "تراکنش ناموفق است";
+                                        break;
+                                        
+                                        case -32:
+                                        $msg = "مغایرت مبالغ اعلام شده با مبلغ تراکنش";
+                                        break;
+                                        
+                                        
+                                        case -35:
+                                        $msg = "شناسه فاکتور اعلامی order_id نامعتبر است";
+                                        break;
+                                        
+                                        case -36:
+                                        $msg = "پارامترهای برگشتی بانک bank_return نامعتبر است";
+                                        break;
+                                        case -38:
+                                        $msg = "تراکنش برای چندمین بار وریفای شده است";
+                                        break;
+                                        
+                                        case -39:
+                                        $msg = "تراکنش در حال انجام است";
+                                        break;
+                                        
+                                        case 1:
+                                        $msg = "پرداخت با موفقیت انجام گردید.";
+                                        break;
+                                        
+                                        default:
+                                        $msg = $json['msg'];
+                                        }
+
+
+
+
+
+
                     if($json['result'] == 1)
 			        {
 					$out['status'] =1;
@@ -137,6 +343,7 @@ $au=$transData['au']; //
 					else
 					{
 					$out['status'] =0;
+						print_r($msg);
 				    }
 					}
 				

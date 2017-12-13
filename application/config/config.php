@@ -6,7 +6,7 @@ $config['base_url']	= 'http://localhost/AsanPardakht';
 $config['username'] = 'admin';
 $config['password'] = 'demo';
 $config['sn_api'] = 'gt2g423';
-
+$config['sn_webservice'] = '1';// اگر 1 بگذارید اطلاعات کاربر در پنل شما ذخیره خواهد شد. برای غیر فعال کردن مقدار آن را 0 قرار دهید
 /*
 |--------------------------------------------------------------------------
 | Index File
