@@ -61,7 +61,7 @@ class Welcome extends CI_Controller {
                             						));
 						
 	                        }
-      var_dump($data_string);
+      
 							$ch = curl_init('https://developerapi.net/api/v1/request');
 							curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
 							curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
